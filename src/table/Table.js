@@ -9,6 +9,9 @@ class Table extends React.Component {
     this.state = { deck: DECK };
     this.shuffle = this.shuffle.bind(this);
     this.deal = this.deal.bind(this);
+    this.flop = this.flop.bind(this);
+    this.turn = this.turn.bind(this);
+    this.river = this.river.bind(this);
   }
 
   shuffle() {
@@ -47,6 +50,40 @@ class Table extends React.Component {
     ReactDOM.render(<tr>{holeCards}</tr>, document.getElementById("seats"));
   }
 
+  flop() {
+    //   burn a card
+    this.state.deck.shift();
+    const flopCards = this.state.deck.splice(0, 3).map(card => card.name);
+    this.setState(this.state.deck);
+
+    ReactDOM.render(<p>{flopCards}</p>, document.getElementById("flop"));
+  }
+
+  turn() {
+    //   burn a card
+    this.state.deck.shift();
+
+    const turnCard = this.state.deck.splice(0, 1);
+    console.log("turnCard: ", turnCard);
+    this.setState(this.state.deck);
+
+    ReactDOM.render(<p>{turnCard[0].name}</p>, document.getElementById("turn"));
+  }
+
+  river() {
+    //   burn a card
+    this.state.deck.shift();
+
+    const riverCard = this.state.deck.splice(0, 1);
+    console.log("riverCard: ", riverCard);
+    this.setState(this.state.deck);
+
+    ReactDOM.render(
+      <p>{riverCard[0].name}</p>,
+      document.getElementById("river")
+    );
+  }
+
   render() {
     return (
       <div>
@@ -54,10 +91,10 @@ class Table extends React.Component {
         <p>{this.state.deck.map(card => card.name)}</p>
         <button onClick={this.shuffle}>Shuffle</button>
         <button onClick={this.deal}>Deal</button>
-        <button>Flop</button>
-        <button>Turn</button>
-        <button>River</button>
-        <table className="warning">
+        <button onClick={this.flop}>Flop</button>
+        <button onClick={this.turn}>Turn</button>
+        <button onClick={this.river}>River</button>
+        <table className="playersTable">
           <thead>
             <tr>
               <th className="player">Player 1</th>
@@ -69,6 +106,23 @@ class Table extends React.Component {
             </tr>
           </thead>
           <tbody id="seats"></tbody>
+        </table>
+        <h2>Board</h2>
+        <table className="boardTable">
+          <thead>
+            <tr>
+              <th>Flop</th>
+              <th>Turn</th>
+              <th>River</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="flop"></td>
+              <td id="turn"></td>
+              <td id="river"></td>
+            </tr>
+          </tbody>
         </table>
       </div>
     );
