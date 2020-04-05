@@ -39,8 +39,8 @@ class Table extends React.Component {
   deal() {
     const hand = [
       { value: "Five", score: 5, name: "5c", suit: "c" },
-      { value: "Six", score: 6, name: "6c", suit: "c" },
-      { value: "Four", score: 4, name: "4s", suit: "s" },
+      { value: "Ace", score: 14, name: "As", suit: "s" },
+      { value: "Nine", score: 9, name: "9c", suit: "c" },
       { value: "Three", score: 3, name: "3s", suit: "s" },
       { value: "Two", score: 2, name: "2s", suit: "s" }
     ];
