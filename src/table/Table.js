@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { DECK } from "../common/Deck";
 import Player from "../player/Player";
+import { calculateHandStrength } from "../common/HandStrengthCalculator";
 
 class Table extends React.Component {
   constructor(props) {
@@ -36,6 +37,14 @@ class Table extends React.Component {
   }
 
   deal() {
+    const hand = [
+      { value: "Five", score: 5, name: "5c", suit: "c" },
+      { value: "Six", score: 6, name: "6c", suit: "c" },
+      { value: "Four", score: 4, name: "4s", suit: "s" },
+      { value: "Three", score: 3, name: "3s", suit: "s" },
+      { value: "Two", score: 2, name: "2s", suit: "s" }
+    ];
+    console.log("Hand Strength: ", calculateHandStrength(hand));
     let numberOfPlayers = document.querySelectorAll("th.player").length;
 
     let firstCards = this.state.deck.splice(0, numberOfPlayers);
@@ -64,7 +73,6 @@ class Table extends React.Component {
     this.state.deck.shift();
 
     const turnCard = this.state.deck.splice(0, 1);
-    console.log("turnCard: ", turnCard);
     this.setState(this.state.deck);
 
     ReactDOM.render(<p>{turnCard[0].name}</p>, document.getElementById("turn"));
@@ -75,7 +83,6 @@ class Table extends React.Component {
     this.state.deck.shift();
 
     const riverCard = this.state.deck.splice(0, 1);
-    console.log("riverCard: ", riverCard);
     this.setState(this.state.deck);
 
     ReactDOM.render(
