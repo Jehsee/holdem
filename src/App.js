@@ -1,12 +1,13 @@
 import React from "react";
 import "./App.css";
 import Table from "./table/Table";
+import Player from "./player/Player";
 
 function App() {
   return (
-    <div>
-      <Table />
-    </div>
+    <Table>
+      <Player></Player>
+    </Table>
   );
 }
 

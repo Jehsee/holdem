@@ -2,17 +2,18 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { DECK } from "../common/Deck";
 import Player from "../player/Player";
-import { calculateHandStrength } from "../common/HandStrengthCalculator";
+// import { calculateHandStrength } from "../common/HandStrengthCalculator";
 
 class Table extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { deck: DECK };
+    this.state = { deck: DECK, flop: [], turn: [], river: [] };
     this.shuffle = this.shuffle.bind(this);
     this.deal = this.deal.bind(this);
     this.flop = this.flop.bind(this);
     this.turn = this.turn.bind(this);
     this.river = this.river.bind(this);
+    this.displayHandStrengths = this.displayHandStrengths.bind(this);
   }
 
   shuffle() {
@@ -37,35 +38,26 @@ class Table extends React.Component {
   }
 
   deal() {
-    const hand = [
-      { value: "Five", score: 5, name: "5c", suit: "c" },
-      { value: "Ace", score: 14, name: "As", suit: "s" },
-      { value: "Nine", score: 9, name: "9c", suit: "c" },
-      { value: "Three", score: 3, name: "3s", suit: "s" },
-      { value: "Two", score: 2, name: "2s", suit: "s" }
-    ];
-    console.log("Hand Strength: ", calculateHandStrength(hand));
     let numberOfPlayers = document.querySelectorAll("th.player").length;
 
     let firstCards = this.state.deck.splice(0, numberOfPlayers);
     let secondCards = this.state.deck.splice(0, numberOfPlayers);
 
-    let holeCards = firstCards.map(function(e, i) {
+    let playerComponent = firstCards.map(function(e, i) {
       return <Player key={i} holeCards={[e, secondCards[i]]} />;
     });
 
     this.setState(this.state.deck);
-
-    ReactDOM.render(<tr>{holeCards}</tr>, document.getElementById("seats"));
+    this.setState({ playerComponent: playerComponent });
   }
 
   flop() {
     //   burn a card
     this.state.deck.shift();
-    const flopCards = this.state.deck.splice(0, 3).map(card => card.name);
-    this.setState(this.state.deck);
 
-    ReactDOM.render(<p>{flopCards}</p>, document.getElementById("flop"));
+    const flopCards = this.state.deck.splice(0, 3);
+    this.setState(this.state.deck);
+    this.setState({ flop: flopCards });
   }
 
   turn() {
@@ -74,8 +66,7 @@ class Table extends React.Component {
 
     const turnCard = this.state.deck.splice(0, 1);
     this.setState(this.state.deck);
-
-    ReactDOM.render(<p>{turnCard[0].name}</p>, document.getElementById("turn"));
+    this.setState({ turn: turnCard });
   }
 
   river() {
@@ -84,11 +75,11 @@ class Table extends React.Component {
 
     const riverCard = this.state.deck.splice(0, 1);
     this.setState(this.state.deck);
+    this.setState({ river: riverCard });
+  }
 
-    ReactDOM.render(
-      <p>{riverCard[0].name}</p>,
-      document.getElementById("river")
-    );
+  displayHandStrengths() {
+    console.log("this.state.flop: ", this.state.flop);
   }
 
   render() {
@@ -101,6 +92,9 @@ class Table extends React.Component {
         <button onClick={this.flop}>Flop</button>
         <button onClick={this.turn}>Turn</button>
         <button onClick={this.river}>River</button>
+        <button onClick={this.displayHandStrengths}>
+          Calculate Hand Strengths
+        </button>
         <table className="playersTable">
           <thead>
             <tr>
@@ -112,7 +106,9 @@ class Table extends React.Component {
               <th className="player">Player 6</th>
             </tr>
           </thead>
-          <tbody id="seats"></tbody>
+          <tbody>
+            <tr>{this.state.playerComponent}</tr>
+          </tbody>
         </table>
         <h2>Board</h2>
         <table className="boardTable">
@@ -125,9 +121,9 @@ class Table extends React.Component {
           </thead>
           <tbody>
             <tr>
-              <td id="flop"></td>
-              <td id="turn"></td>
-              <td id="river"></td>
+              <td>{this.state.flop.map(card => card.name)}</td>
+              <td>{this.state.turn.map(card => card.name)}</td>
+              <td>{this.state.turn.map(card => card.name)}</td>
             </tr>
           </tbody>
         </table>
