@@ -1,8 +1,7 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import { DECK } from "../common/Deck";
 import Player from "../player/Player";
-// import { calculateHandStrength } from "../common/HandStrengthCalculator";
+import { calculateHandStrength } from "../common/HandStrengthCalculator";
 
 class Table extends React.Component {
   constructor(props) {
@@ -79,7 +78,25 @@ class Table extends React.Component {
   }
 
   displayHandStrengths() {
-    console.log("this.state.flop: ", this.state.flop);
+    // for each player, combine hole cards flop turn river, figure out which 5 cards to use
+    this.state.playerComponent.forEach(player => {
+      let hand = player.props.holeCards.concat(
+        this.state.flop,
+        this.state.turn,
+        this.state.river
+      );
+
+      //   const testhand = [
+      //     { value: "Ace", score: 14, name: "As", suit: "s" },
+      //     { value: "Queen", score: 9, name: "Qd", suit: "d" },
+      //     { value: "Jack", score: 8, name: "Jh", suit: "h" },
+      //     { value: "Ten", score: 5, name: "10c", suit: "c" },
+      //     { value: "Nine", score: 4, name: "9d", suit: "d" },
+      //     { value: "Eight", score: 2, name: "8c", suit: "c" },
+      //     { value: "Two", score: 2, name: "2d", suit: "d" }
+      //   ];
+      console.log("Player's Hand Strength: ", calculateHandStrength(hand));
+    });
   }
 
   render() {
@@ -123,7 +140,7 @@ class Table extends React.Component {
             <tr>
               <td>{this.state.flop.map(card => card.name)}</td>
               <td>{this.state.turn.map(card => card.name)}</td>
-              <td>{this.state.turn.map(card => card.name)}</td>
+              <td>{this.state.river.map(card => card.name)}</td>
             </tr>
           </tbody>
         </table>

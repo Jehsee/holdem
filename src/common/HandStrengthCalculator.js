@@ -1,25 +1,85 @@
 export function calculateHandStrength(hand) {
-  // sort the cards by high to low card score
   hand.sort((a, b) => (a.score < b.score ? 1 : b.score < a.score ? -1 : 0));
-
-  const isFlush = hand.every(card => card.suit === hand[0].suit);
-
-  let isStraight = hand.every((card, index) => {
-    return (
-      index === hand.length - 1 || card.score === hand[index + 1].score + 1
-    );
+  let isFlush = false;
+  let isStraight = false;
+  const suits = ["h", "d", "s", "c"];
+  let bestFiveCardHand;
+  // CHECK FOR FLUSH POSSIBILITY
+  suits.forEach(suit => {
+    let suitedCards = hand.filter(card => card.suit === suit);
+    if (suitedCards.length > 4) {
+      bestFiveCardHand = suitedCards
+        // SORT BY SCORE
+        .sort((a, b) => (a.score < b.score ? 1 : b.score < a.score ? -1 : 0))
+        //  GRAB 5 HIGHEST CARDS
+        .slice(0, 5);
+      isFlush = true;
+    }
   });
-  const isRoyalFlush = isFlush && isStraight && hand[0].score === 14;
-  const isStraightFlush = isFlush && isStraight && hand[0] !== 14;
+
+  // CHECK FOR STRAIGHT POSSIBILITY IF NO FLUSH POSSIBILITY AND REMOVE LOWEST CARD
+  // sort the cards by high to low card score
+  const bestFiveCardStraightHand = hand.reduce(
+    (acc, card, index, arr) => {
+      if (acc.length === 5) {
+        isStraight = true;
+
+        // returning if 5 straight cards have accrued
+        return acc;
+      } else if (card.score === acc[acc.length - 1].score - 1) {
+        acc.push(card);
+      } else {
+        acc.length = 0;
+        acc.push(card);
+      }
+
+      // check for low end straight
+      if (
+        arr[0].score === 14 &&
+        arr[3].score === 5 &&
+        arr[4].score === 4 &&
+        arr[5].score === 3 &&
+        arr[6].score === 2
+      ) {
+        acc.length = 0;
+        acc.push(arr[0], arr[3], arr[4], arr[5], arr[6]);
+        isStraight = true;
+        return acc;
+      } else {
+        return acc;
+      }
+    },
+    [hand[0]]
+  );
+
+  if (bestFiveCardStraightHand.length < 5) {
+    // TODO: HERE YOU MUST REDUCE TO 5 CARDS THAT ARE ALSO PAIR TYPE HANDS
+    bestFiveCardHand = hand.reduce((acc, card, i, arr) => {
+      
+
+      if (acc.length === 5) {
+        return acc;
+      } else if (arr.splice(i, 1).includes(card.score)) {
+        acc.push(card);
+      } else 
+    }, []);
+  } else {
+    bestFiveCardHand = bestFiveCardStraightHand;
+  }
+
+  console.log("bestFiveCardHand: ", bestFiveCardHand);
+  const isRoyalFlush =
+    isFlush && isStraight && bestFiveCardHand[0].score === 14;
+  const isStraightFlush = isFlush && isStraight && bestFiveCardHand[0] !== 14;
 
   // else if matching card scores, handle full house, four of a kind, three of a kind, two pairs, and pairs
   // for each card: check to see if it matches with any other card,
   const matches = [];
 
-  hand.forEach(card => {
+  bestFiveCardHand.forEach(card => {
     let matchCount = 0;
-    for (let i = 0; i < hand.length; i++) {
-      if (card.score === hand[i].score) {
+    for (let i = 0; i < bestFiveCardHand.length; i++) {
+      if (card.score === bestFiveCardHand[i].score) {
         matchCount += 1;
       }
     }
@@ -61,22 +121,22 @@ export function calculateHandStrength(hand) {
   }
 
   return isRoyalFlush
-    ? { name: "Royal Flush", score: 10 }
+    ? { name: "Royal Flush", score: 10, hand: bestFiveCardHand }
     : isStraightFlush
-    ? { name: "Straight Flush", score: 9 }
+    ? { name: "Straight Flush", score: 9, hand: bestFiveCardHand }
     : combos.fourOfKind.includes(matchCombos)
-    ? { name: "Four of a Kind", score: 8 }
+    ? { name: "Four of a Kind", score: 8, hand: bestFiveCardHand }
     : combos.fullHouse.includes(matchCombos)
-    ? { name: "Full House", score: 7 }
+    ? { name: "Full House", score: 7, hand: bestFiveCardHand }
     : isFlush
-    ? { name: "Flush", score: 6 }
+    ? { name: "Flush", score: 6, hand: bestFiveCardHand }
     : isStraight
-    ? { name: "Straight", score: 5 }
+    ? { name: "Straight", score: 5, hand: bestFiveCardHand }
     : combos.threeOfKind.includes(matchCombos)
-    ? { name: "Three of a Kind", score: 4 }
+    ? { name: "Three of a Kind", score: 4, hand: bestFiveCardHand }
     : combos.twoPairs.includes(matchCombos)
-    ? { name: "Two Pair", score: 3 }
+    ? { name: "Two Pair", score: 3, hand: bestFiveCardHand }
     : combos.onePair.includes(matchCombos)
-    ? { name: "One Pair", score: 2 }
-    : { name: "High Card", score: 1 };
+    ? { name: "One Pair", score: 2, hand: bestFiveCardHand }
+    : { name: "High Card", score: 1, hand: bestFiveCardHand };
 }

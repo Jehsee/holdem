@@ -1,3 +1,28 @@
+### HOLDEM SIMULATOR APP
+
+Calculating Hand Strength
+
+- Any hand that gets to showdown will require calculation of hand strength to determine winner
+  To determine this, given what will always be an array of 5 card objects, return the hand strength.
+  function determineHandStrength(hand);
+
+1. Sort cards by score
+2. Check for flushes and flush type hands: Flush, Straight Flush, Royal Flush
+   a. if all five suits have same suit, Flush
+   b. if flush and also sequential score, Straight Flush
+   c. if flush, sequential score, and highest score is 14 (Ace), then Royal Flush
+   d. if not flush but sequential score, then Straight
+3. Check for pair type hands: Four of a kind, Full House, Two Pairs, and One Pair
+   a. count up the matches and return those numbers.
+   b. if [4,1] or [1,4] it will equal Four of a kind
+   if [3,2] or [2,3] it will equal Full House
+   if [3,1,1], [1,3,1], or [1,1,3] it will equal Three of a Kind
+   if [2,2,1], [2,1,2], or [1,2,2] it will equal Two Pairs
+   if [2,1,1,1], [1,2,1,1], [1,1,2,1], or [1,1,1,2] it will equal One Pair
+   if [1,1,1,1,1] it will equal High Card
+
+---
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
@@ -66,26 +91,3 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
-
-### HOLDEM SIMULATOR APP
-
-Calculating Hand Strength
-
-- Any hand that gets to showdown will require calculation of hand strength to determine winner
-  To determine this, given what will always be an array of 5 card objects, return the hand strength.
-  function determineHandStrength(hand);
-
-1. Sort cards by score
-2. Check for flushes and flush type hands: Flush, Straight Flush, Royal Flush
-   a. if all five suits have same suit, Flush
-   b. if flush and also sequential score, Straight Flush
-   c. if flush, sequential score, and highest score is 14 (Ace), then Royal Flush
-   d. if not flush but sequential score, then Straight
-3. Check for pair type hands: Four of a kind, Full House, Two Pairs, and One Pair
-   a. count up the matches and return those numbers.
-   b. if [4,1] or [1,4] it will equal Four of a kind
-   if [3,2] or [2,3] it will equal Full House
-   if [3,1,1], [1,3,1], or [1,1,3] it will equal Three of a Kind
-   if [2,2,1], [2,1,2], or [1,2,2] it will equal Two Pairs
-   if [2,1,1,1], [1,2,1,1], [1,1,2,1], or [1,1,1,2] it will equal One Pair
-   if [1,1,1,1,1] it will equal High Card
