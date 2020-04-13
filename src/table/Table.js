@@ -55,6 +55,7 @@ class Table extends React.Component {
     this.state.deck.shift();
 
     const flopCards = this.state.deck.splice(0, 3);
+    console.log("flop: ", flopCards)
     this.setState(this.state.deck);
     this.setState({ flop: flopCards });
   }
@@ -64,6 +65,7 @@ class Table extends React.Component {
     this.state.deck.shift();
 
     const turnCard = this.state.deck.splice(0, 1);
+    console.log("turnCard: ", turnCard)
     this.setState(this.state.deck);
     this.setState({ turn: turnCard });
   }
@@ -73,6 +75,7 @@ class Table extends React.Component {
     this.state.deck.shift();
 
     const riverCard = this.state.deck.splice(0, 1);
+    console.log("river: ", riverCard)
     this.setState(this.state.deck);
     this.setState({ river: riverCard });
   }
@@ -87,15 +90,18 @@ class Table extends React.Component {
       );
 
       //   const testhand = [
-      //     { value: "Ace", score: 14, name: "As", suit: "s" },
-      //     { value: "Queen", score: 9, name: "Qd", suit: "d" },
-      //     { value: "Jack", score: 8, name: "Jh", suit: "h" },
-      //     { value: "Ten", score: 5, name: "10c", suit: "c" },
-      //     { value: "Nine", score: 4, name: "9d", suit: "d" },
-      //     { value: "Eight", score: 2, name: "8c", suit: "c" },
+      //     { value: "Six", score: 6, name: "6s", suit: "s" },
+      //     { value: "Queen", score: 12, name: "Qd", suit: "d" },
+      //     { value: "Eight", score: 8, name: "8s", suit: "s" },
+      //     { value: "Six", score: 6, name: "6d", suit: "d" },
+      //     { value: "Eight", score: 8, name: "8d", suit: "d" },
+      //     { value: "Eight", score: 8, name: "8c", suit: "c" },
       //     { value: "Two", score: 2, name: "2d", suit: "d" }
       //   ];
-      console.log("Player's Hand Strength: ", calculateHandStrength(hand));
+      // console.log("Player's Hand Strength: ", calculateHandStrength(testhand));
+      console.log("Player's Hole Cards: ", player.props.holeCards)
+      console.log("Player's Hand Name: ", calculateHandStrength(hand).name);
+      console.log("Player's Hand: ", calculateHandStrength(hand).hand);
     });
   }
 

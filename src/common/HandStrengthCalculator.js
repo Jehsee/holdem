@@ -19,7 +19,8 @@ export function calculateHandStrength(hand) {
 
   // CHECK FOR STRAIGHT POSSIBILITY IF NO FLUSH POSSIBILITY AND REMOVE LOWEST CARD
   // sort the cards by high to low card score
-  const bestFiveCardStraightHand = hand.reduce(
+  const possibleStraightHand = hand;
+  const bestFiveCardStraightHand = possibleStraightHand.reduce(
     (acc, card, index, arr) => {
       if (acc.length === 5) {
         isStraight = true;
@@ -27,8 +28,10 @@ export function calculateHandStrength(hand) {
         // returning if 5 straight cards have accrued
         return acc;
       } else if (card.score === acc[acc.length - 1].score - 1) {
+        // if card has consecutive score, push to acc
         acc.push(card);
       } else {
+        // else reset acc 
         acc.length = 0;
         acc.push(card);
       }
@@ -49,25 +52,48 @@ export function calculateHandStrength(hand) {
         return acc;
       }
     },
-    [hand[0]]
+    [possibleStraightHand[0]]
   );
 
+    // if straight hand was not a possibility
   if (bestFiveCardStraightHand.length < 5) {
-    // TODO: HERE YOU MUST REDUCE TO 5 CARDS THAT ARE ALSO PAIR TYPE HANDS
-    bestFiveCardHand = hand.reduce((acc, card, i, arr) => {
-      
+      const highCards = [];
+      bestFiveCardHand = hand.reduce((acc, card, i, arr) => {
+        const filtered = arr.filter(elem => elem !== card);
 
-      if (acc.length === 5) {
+        // separate matched cards and high cards
+        if (filtered.some(elem => elem.score === card.score)) {
+          acc.push(card)
+        } else {
+          highCards.push(card);
+        }
+        if (i === arr.length - 1) {
+          switch (acc.length) {
+            case 6:
+              acc.splice(4, 2);
+              acc.push(highCards[0],highCards[1]);
+              return acc;
+            case 5: 
+              return acc;
+            case 4: 
+              acc.push(highCards[0]);
+              return acc;
+            case 3:
+              acc.push(highCards[0],highCards[1]);
+              return acc;
+            case 2:
+              acc.push(highCards[0],highCards[1],highCards[3]);
+              return acc;
+            default: 
+              return highCards.splice(0,5);
+          }
+        }
         return acc;
-      } else if (arr.splice(i, 1).includes(card.score)) {
-        acc.push(card);
-      } else 
-    }, []);
-  } else {
-    bestFiveCardHand = bestFiveCardStraightHand;
-  }
+      }, []);
+    } else {
+      bestFiveCardHand = bestFiveCardStraightHand;
+    };
 
-  console.log("bestFiveCardHand: ", bestFiveCardHand);
   const isRoyalFlush =
     isFlush && isStraight && bestFiveCardHand[0].score === 14;
   const isStraightFlush = isFlush && isStraight && bestFiveCardHand[0] !== 14;
