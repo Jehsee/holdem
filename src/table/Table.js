@@ -55,7 +55,7 @@ class Table extends React.Component {
     this.state.deck.shift();
 
     const flopCards = this.state.deck.splice(0, 3);
-    console.log("flop: ", flopCards)
+    console.log("flop: ", flopCards);
     this.setState(this.state.deck);
     this.setState({ flop: flopCards });
   }
@@ -65,7 +65,7 @@ class Table extends React.Component {
     this.state.deck.shift();
 
     const turnCard = this.state.deck.splice(0, 1);
-    console.log("turnCard: ", turnCard)
+    console.log("turnCard: ", turnCard);
     this.setState(this.state.deck);
     this.setState({ turn: turnCard });
   }
@@ -75,7 +75,7 @@ class Table extends React.Component {
     this.state.deck.shift();
 
     const riverCard = this.state.deck.splice(0, 1);
-    console.log("river: ", riverCard)
+    console.log("river: ", riverCard);
     this.setState(this.state.deck);
     this.setState({ river: riverCard });
   }
@@ -89,19 +89,19 @@ class Table extends React.Component {
         this.state.river
       );
 
-      //   const testhand = [
-      //     { value: "Six", score: 6, name: "6s", suit: "s" },
-      //     { value: "Queen", score: 12, name: "Qd", suit: "d" },
-      //     { value: "Eight", score: 8, name: "8s", suit: "s" },
-      //     { value: "Six", score: 6, name: "6d", suit: "d" },
-      //     { value: "Eight", score: 8, name: "8d", suit: "d" },
-      //     { value: "Eight", score: 8, name: "8c", suit: "c" },
-      //     { value: "Two", score: 2, name: "2d", suit: "d" }
-      //   ];
-      // console.log("Player's Hand Strength: ", calculateHandStrength(testhand));
-      console.log("Player's Hole Cards: ", player.props.holeCards)
-      console.log("Player's Hand Name: ", calculateHandStrength(hand).name);
-      console.log("Player's Hand: ", calculateHandStrength(hand).hand);
+      const testhand = [
+        { value: "Ten", score: 10, name: "10d", suit: "d" },
+        { value: "Ace", score: 14, name: "Ah", suit: "h" },
+        { value: "Queen", score: 12, name: "Qd", suit: "d" },
+        { value: "Five", score: 5, name: "5h", suit: "h" },
+        { value: "Four", score: 4, name: "4h", suit: "h" },
+        { value: "Three", score: 3, name: "3d", suit: "d" },
+        { value: "Two", score: 2, name: "2h", suit: "h" }
+      ];
+      console.log("Player's Hand Strength: ", calculateHandStrength(testhand));
+      //   console.log("Player's Hole Cards: ", player.props.holeCards);
+      //   console.log("Player's Hand Name: ", calculateHandStrength(hand).name);
+      //   console.log("Player's Hand: ", calculateHandStrength(hand).hand);
     });
   }
 
