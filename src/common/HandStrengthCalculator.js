@@ -27,33 +27,37 @@ export function calculateHandStrength(hand) {
     }
   });
 
-  const possibleStraightHand = hand;
+  // const possibleStraightHand = hand;
+  const possibleStraightHand = hand.map(card => card.score)
+    .map((card, index,array) => array.indexOf(card) === index && index)
+    .filter(card => hand[card])
+    .map(card => hand[card])
   const bestFiveCardStraightHand = possibleStraightHand.reduce(
     (acc, card, index, arr) => {
-      if (acc.length === 5) {
-        isStraight = true;
-
-        // return if 5 straight cards have accrued
-        return acc;
-      } else if (card.score === acc[acc.length - 1].score - 1) {
+      // debugger;
+      if (card.score === acc[acc.length - 1].score - 1) {
         // if card has consecutive score, push to acc
         acc.push(card);
+        // debugger;
       } else {
         // else reset acc
         acc.length = 0;
         acc.push(card);
       }
 
+      if (acc.length === 5) {isStraight = true}
+
       // check for low end straight
-      if (
+      if (arr.length > 4 &&
         arr[0].score === 14 &&
-        arr[3].score === 5 &&
-        arr[4].score === 4 &&
-        arr[5].score === 3 &&
-        arr[6].score === 2
+        arr[arr.length-5].score !== 6 &&
+        arr[arr.length-4].score === 5 &&
+        arr[arr.length-3].score === 4 &&
+        arr[arr.length-2].score === 3 &&
+        arr[arr.length-1].score === 2
       ) {
         acc.length = 0;
-        acc.push(arr[0], arr[3], arr[4], arr[5], arr[6]);
+        acc.push(arr[0], arr[arr.length-4], arr[arr.length-3], arr[arr.length-2], arr[arr.length-1]);
         isStraight = true;
         return acc;
       } else {
@@ -62,7 +66,8 @@ export function calculateHandStrength(hand) {
     },
     [possibleStraightHand[0]]
   );
-
+    // console.log('bestFiveCardStraightHand: ',bestFiveCardStraightHand);
+  // debugger;
   if (flushPossibility && isStraight) {
     const allSuited = bestFiveCardStraightHand.every(
       card => card.suit === bestFiveCardStraightHand[0].suit

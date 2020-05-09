@@ -13,6 +13,7 @@ class Table extends React.Component {
     this.turn = this.turn.bind(this);
     this.river = this.river.bind(this);
     this.displayHandStrengths = this.displayHandStrengths.bind(this);
+    this.selectWinner = this.selectWinner.bind(this);
   }
 
   shuffle() {
@@ -43,7 +44,7 @@ class Table extends React.Component {
     let secondCards = this.state.deck.splice(0, numberOfPlayers);
 
     let playerComponent = firstCards.map(function(e, i) {
-      return <Player key={i} holeCards={[e, secondCards[i]]} />;
+      return <Player key={i} holeCards={[e, secondCards[i]]} name={'Player ' + (parseInt(i)+1)} />;
     });
 
     this.setState(this.state.deck);
@@ -81,7 +82,8 @@ class Table extends React.Component {
   }
 
   displayHandStrengths() {
-    // for each player, combine hole cards flop turn river, figure out which 5 cards to use
+    // for each player, combine hole cards with flop turn river, figure out which 5 cards to use
+    const playersCompletedHands = [];
     this.state.playerComponent.forEach(player => {
       let hand = player.props.holeCards.concat(
         this.state.flop,
@@ -89,20 +91,28 @@ class Table extends React.Component {
         this.state.river
       );
 
-      const testhand = [
-        { value: "Ten", score: 10, name: "10d", suit: "d" },
-        { value: "Ace", score: 14, name: "Ah", suit: "h" },
-        { value: "Queen", score: 12, name: "Qd", suit: "d" },
-        { value: "Five", score: 5, name: "5h", suit: "h" },
-        { value: "Four", score: 4, name: "4h", suit: "h" },
-        { value: "Three", score: 3, name: "3d", suit: "d" },
-        { value: "Two", score: 2, name: "2h", suit: "h" }
-      ];
-      console.log("Player's Hand Strength: ", calculateHandStrength(testhand));
-      //   console.log("Player's Hole Cards: ", player.props.holeCards);
-      //   console.log("Player's Hand Name: ", calculateHandStrength(hand).name);
-      //   console.log("Player's Hand: ", calculateHandStrength(hand).hand);
+        // const testhand = [
+        //   { value: "Four", score: 4, name: "4d", suit: "d" },
+        //   { value: "Ace", score: 14, name: "Ac", suit: "c" },
+        //   { value: "Ace", score: 14, name: "Ah", suit: "h" },
+        //   { value: "Eight", score: 8, name: "8d", suit: "d" },
+        //   { value: "Five", score: 5, name: "5d", suit: "d" },
+        //   { value: "Three", score: 3, name: "3d", suit: "d" },
+        //   { value: "Two", score: 2, name: "2d", suit: "d" },
+        // ];
+        // console.log("Player's Hand Strength: ", calculateHandStrength(testhand));
+      // console.log("Player's Hand: ", calculateHandStrength(hand));
+      const playerHand = {name: player.props.name, final: calculateHandStrength(hand)}
+      playersCompletedHands.push(playerHand)
     });
+    this.setState({completedPlayerHands: playersCompletedHands})
+  }
+
+  selectWinner() {
+    const winners = this.state.completedPlayerHands.sort((a, b) => a.final.score < b.final.score ? 1 : b.final.score < a.final.score ? -1 : 0).filter((player,index,arr) => player.final.score === arr[0].final.score)
+    console.log('winners: ',winners);
+    
+
   }
 
   render() {
@@ -118,6 +128,7 @@ class Table extends React.Component {
         <button onClick={this.displayHandStrengths}>
           Calculate Hand Strengths
         </button>
+        <button onClick={this.selectWinner}>Determine Winner(s)</button>
         <table className="playersTable">
           <thead>
             <tr>
@@ -127,6 +138,9 @@ class Table extends React.Component {
               <th className="player">Player 4</th>
               <th className="player">Player 5</th>
               <th className="player">Player 6</th>
+              <th className="player">Player 7</th>
+              <th className="player">Player 8</th>
+              <th className="player">Player 9</th>
             </tr>
           </thead>
           <tbody>
@@ -150,6 +164,7 @@ class Table extends React.Component {
             </tr>
           </tbody>
         </table>
+        
       </div>
     );
   }
